@@ -1,2 +1,2 @@
-# enhanced_containers_foundation
-A pure Dart foundation for the enhanced_containers package
+A sample command-line application with an entrypoint in `bin/`, library code
+in `lib/`, and example unit test in `test/`.
