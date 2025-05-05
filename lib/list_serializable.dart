@@ -135,6 +135,14 @@ abstract class ListSerializable<T extends ItemSerializable>
     return firstWhere((element) => element.id == id);
   }
 
+  T? fromIdOrNull(String id) {
+    try {
+      return fromId(id);
+    } catch (e) {
+      return null;
+    }
+  }
+
   /// Return the specified [id] is in the list.
   ///
   bool hasId(String id) {
