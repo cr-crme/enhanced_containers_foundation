@@ -4,7 +4,7 @@ abstract class NamedItemSerializable extends ItemSerializable {
   final String name;
 
   NamedItemSerializable.fromSerialized(super.map)
-      : name = map['n'],
+      : name = map?['n'],
         super.fromSerialized();
 
   @override
