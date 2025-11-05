@@ -12,7 +12,7 @@ abstract class MapSerializable<T extends ItemSerializable>
   MapSerializable();
 
   /// Creates a [MapSerializable] from a map of serialized items.
-  MapSerializable.fromSerialized(map) {
+  MapSerializable.fromSerialized(Map? map) {
     deserialize(map);
   }
 
@@ -26,12 +26,12 @@ abstract class MapSerializable<T extends ItemSerializable>
   }
 
   /// Returns a new [T] from the provided serialized data.
-  T deserializeItem(data);
+  T deserializeItem(Map? data);
 
   /// Deserializes a map of items with the help of [deserializeItem].
-  void deserialize(map) {
+  void deserialize(Map? map) {
     _items.clear();
-    map.forEach((key, element) {
+    map?.forEach((key, element) {
       _items[key] = deserializeItem(element);
     });
   }
@@ -53,26 +53,26 @@ abstract class MapSerializable<T extends ItemSerializable>
   /// Sets the value of the item to [item] at the specified location.
   ///
   /// This method accepts a [String] as a [key] or an [ItemSerializable], where its id is going to be used.
-  void operator []=(key, T item) {
+  void operator []=(dynamic key, T item) {
     _items[_getKey(key)] = item;
   }
 
   /// Returns the item specified by [key].
   ///
   /// This method accepts a [String] as a [key] or an [ItemSerializable], where its id is going to be used.
-  T? operator [](key) {
+  T? operator [](dynamic key) {
     return _items[_getKey(key)];
   }
 
   /// Removes a single item from the list.
   ///
   /// This method accepts a [String] as a [value] or an [ItemSerializable], where its id is going to be used.
-  void remove(value) {
+  void remove(dynamic value) {
     _items.remove(_getKey(value));
   }
 
   /// Returns if the element specified byt [key] is in the map
-  bool containsKey(key) {
+  bool containsKey(dynamic key) {
     return _items.containsKey(_getKey(key));
   }
 
@@ -85,7 +85,7 @@ abstract class MapSerializable<T extends ItemSerializable>
   Iterable<String> get keys => _items.keys;
 
   /// Returns the key represented by [value] using different methods depending of its type.
-  String _getKey(value) {
+  String _getKey(dynamic value) {
     if (value is String) {
       return value;
     } else if (value is ItemSerializable) {

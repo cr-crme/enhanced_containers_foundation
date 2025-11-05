@@ -14,7 +14,7 @@ abstract class ListSerializable<T extends ItemSerializable>
   ListSerializable();
 
   /// Creates a [ListSerializable] from a map of serialized items.
-  ListSerializable.fromSerialized(map) {
+  ListSerializable.fromSerialized(Map? map) {
     deserialize(map);
   }
 
@@ -28,16 +28,16 @@ abstract class ListSerializable<T extends ItemSerializable>
   }
 
   /// Returns a new [T] from the provided serialized data.
-  T deserializeItem(data);
+  T deserializeItem(Map? data);
 
   /// Returns a copy of the raw list. This method must be used with great care
   /// since modifying this list can resulted in an ill-state of the [ListSerializable]
   List<T> get rawList => _items;
 
   /// Deserializes a map of items with the help of [deserializeItem].
-  void deserialize(map) {
+  void deserialize(Map? map) {
     _items.clear();
-    for (var element in map.values) {
+    for (var element in map?.values ?? []) {
       _items.add(deserializeItem(element));
     }
   }
@@ -72,7 +72,7 @@ abstract class ListSerializable<T extends ItemSerializable>
   ///
   /// This method accepts an `int` as an index, an `String` as an id,
   /// and an [ItemSerializable] as the item to remove.
-  operator []=(value, T item) {
+  void operator []=(dynamic value, T item) {
     _items[_getIndex(value)] = item;
   }
 
@@ -80,7 +80,7 @@ abstract class ListSerializable<T extends ItemSerializable>
   ///
   /// This method accepts an `int` as an index, an `String` as an id,
   /// and an [ItemSerializable] as the item to remove.
-  T operator [](value) {
+  T operator [](dynamic value) {
     return _items[_getIndex(value)];
   }
 
@@ -88,7 +88,7 @@ abstract class ListSerializable<T extends ItemSerializable>
   ///
   /// This method accepts an `int` as an index, an `String` as an id,
   /// and an [ItemSerializable] as the item to remove.
-  void remove(value) {
+  void remove(dynamic value) {
     _items.removeAt(_getIndex(value));
   }
 
@@ -150,7 +150,7 @@ abstract class ListSerializable<T extends ItemSerializable>
   }
 
   /// Returns the index of [value] using different methods depending of its type.
-  int _getIndex(value) {
+  int _getIndex(dynamic value) {
     if (value is int) {
       return value;
     } else if (value is String) {
@@ -170,7 +170,7 @@ abstract class ListSerializable<T extends ItemSerializable>
     return _items.map(toElement);
   }
 
-  Iterable<U> mapRemoveNull<U>(toElement) {
+  Iterable<U> mapRemoveNull<U>(U Function(T) toElement) {
     return _items.map(toElement).where((e) => e != null).cast<U>();
   }
 
@@ -187,7 +187,7 @@ mixin ItemsWithCreationTimed<T extends ItemSerializableWithCreationTime>
   /// Returns a sorted list reorder by time from the oldest to the earliest.
   ///
   /// The order is reversed if [reversed] is true.
-  List<T> toListByTime({reversed = false}) {
+  List<T> toListByTime({bool reversed = false}) {
     final orderedMessages = toList(growable: false);
     orderedMessages.sort(
       reversed
