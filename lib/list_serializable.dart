@@ -170,7 +170,7 @@ abstract class ListSerializable<T extends ItemSerializable>
     return _items.map(toElement);
   }
 
-  Iterable<U> mapRemoveNull<U>(U Function(T) toElement) {
+  Iterable<U> mapRemoveNull<U>(U? Function(T) toElement) {
     return _items.map(toElement).where((e) => e != null).cast<U>();
   }
 
