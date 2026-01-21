@@ -1,6 +1,7 @@
 import 'package:enhanced_containers_foundation/exceptions.dart';
 import 'package:enhanced_containers_foundation/item_serializable.dart';
 import 'package:enhanced_containers_foundation/item_serializable_with_creation_time.dart';
+import 'package:meta/meta.dart';
 
 /// An iterable [List] that is made to handle [ItemSerializable].
 ///
@@ -45,11 +46,19 @@ abstract class ListSerializable<T extends ItemSerializable>
   /// Adds [item] to the end of this list, extending the length by one.
   void add(T item) {
     _items.add(item);
+    onItemAdded(item.id);
   }
+
+  /// Called when an item is added to the list.
+  @protected
+  void onItemAdded(String id) {}
 
   /// Adds all of [items] to the end of this list.
   void addAll(Iterable<T> items) {
     _items.addAll(items);
+    for (final item in items) {
+      onItemAdded(item.id);
+    }
   }
 
   /// Updates the value of [item].
@@ -57,7 +66,12 @@ abstract class ListSerializable<T extends ItemSerializable>
   /// This only works when the ids of the new and old value are identical.
   void replace(T item) {
     _items[_getIndex(item)] = item;
+    onItemReplaced(item.id);
   }
+
+  /// Called when an item is replaced in the list.
+  @protected
+  void onItemReplaced(String id) {}
 
   @override
   bool contains(Object? element) {
@@ -74,6 +88,7 @@ abstract class ListSerializable<T extends ItemSerializable>
   /// and an [ItemSerializable] as the item to remove.
   void operator []=(dynamic value, T item) {
     _items[_getIndex(value)] = item;
+    onItemReplaced(item.id);
   }
 
   /// Returns the item at the location specified by [value].
@@ -90,7 +105,12 @@ abstract class ListSerializable<T extends ItemSerializable>
   /// and an [ItemSerializable] as the item to remove.
   void remove(dynamic value) {
     _items.removeAt(_getIndex(value));
+    onItemRemoved();
   }
+
+  /// Called when an item is removed from the list.
+  @protected
+  void onItemRemoved() {}
 
   /// Moves an item from one position to another
   ///
@@ -100,12 +120,22 @@ abstract class ListSerializable<T extends ItemSerializable>
     if (newIndex > oldIndex) newIndex--;
     final item = _items.removeAt(oldIndex);
     _items.insert(newIndex, item);
+    onItemMoved(item.id, oldIndex, newIndex);
   }
+
+  /// Called when an item is moved in the list.
+  @protected
+  void onItemMoved(String id, int oldIndex, int newIndex) {}
 
   /// Removes all objects from this list; the length of the list becomes zero.
   void clear() {
     _items.clear();
+    onCleared();
   }
+
+  /// Called when the list is cleared.
+  @protected
+  void onCleared() {}
 
   /// The first index in the list that satisfies the provided [test].
   ///
