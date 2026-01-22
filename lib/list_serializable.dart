@@ -29,7 +29,7 @@ abstract class ListSerializable<T extends ItemSerializable>
   }
 
   /// Returns a new [T] from the provided serialized data.
-  T deserializeItem(Map? data);
+  T? deserializeItem(Map? data);
 
   /// Returns a copy of the raw list. This method must be used with great care
   /// since modifying this list can resulted in an ill-state of the [ListSerializable]
@@ -39,7 +39,9 @@ abstract class ListSerializable<T extends ItemSerializable>
   void deserialize(Map? map) {
     _items.clear();
     for (var element in map?.values ?? []) {
-      _items.add(deserializeItem(element));
+      final item = deserializeItem(element);
+      if (item == null) continue;
+      _items.add(item);
     }
   }
 
