@@ -119,7 +119,6 @@ abstract class ListSerializable<T extends ItemSerializable>
   /// This method accepts two `int` as indices, to move a [ItemSerializable] from
   /// one place to another
   void move(int oldIndex, int newIndex) {
-    if (newIndex > oldIndex) newIndex--;
     final item = _items.removeAt(oldIndex);
     _items.insert(newIndex, item);
     onItemMoved(item.id, oldIndex, newIndex);
